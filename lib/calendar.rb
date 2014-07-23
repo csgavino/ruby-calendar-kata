@@ -7,22 +7,26 @@ class Calendar
   end
 
   def to_s
-    [ title, header, days, ].join("\n") + "\n"
+    [ title,
+      header,
+      days ].join("\n") + "\n"
   end
 
   private
   SPACE = ' '
-  OFFSET = 9
+  DAYS_OF_WEEK = %w(Sun Mon Tue Wed Thu Fri Sat)
 
   def title
-    SPACE * OFFSET + month + SPACE + "#{date.cwyear}"
+    SPACE * 9 + month + SPACE + year
   end
 
   def month
     date.strftime '%B'
   end
 
-  DAYS_OF_WEEK = %w(Sun Mon Tue Wed Thu Fri Sat)
+  def year
+    "#{date.cwyear}"
+  end
 
   def header
     days_days = DAYS_OF_WEEK + DAYS_OF_WEEK
@@ -30,9 +34,8 @@ class Calendar
   end
 
   def days
-    offset = (start_day - start_week_on) % 7
     d = days_this_month
-    d.unshift *([0] * offset)
+    d.unshift *start_day_offset
     d.each_slice(7).map do |week|
       week.map do |day|
         '%4.d' % day
@@ -40,15 +43,23 @@ class Calendar
     end
   end
 
-  def start_day
+  def start_day_offset
+    [0] * offset
+  end
+
+  def offset
+    (start_calendar_day - start_week_on) % 7
+  end
+
+  def start_calendar_day
     @date.cwday
   end
 
   def days_this_month
-    [*1..end_day]
+    [*1..end_of_month]
   end
 
-  def end_day
+  def end_of_month
     Date.new(date.year, date.month, -1).day
   end
 
