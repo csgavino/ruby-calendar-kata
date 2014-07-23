@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require_relative 'lib/calendar'
+
+if __FILE__ == $0
+  today = Date.today
+  year  = ARGV.fetch(0) { today.year }
+  month = ARGV.fetch(1) { today.month }
+  start_week_on = ARGV.fetch(2) { 0 }
+
+  print Calendar.new year.to_i, month.to_i, start_week_on.to_i
+end
