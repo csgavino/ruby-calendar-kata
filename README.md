@@ -1,0 +1,2 @@
+Calendar kata in Ruby.
+
